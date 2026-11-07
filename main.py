@@ -7,25 +7,26 @@ from langchain.tools import tool
 from langchain_core.messages import HumanMessage
 from tavily import TavilyClient
 import tavily
+from langchain_tavily import TavilySearch
 
 load_dotenv()
 
 tavily = TavilyClient()
 
-@tool
-def search(query: str) -> str:
-    """
-    Tool that searches over internet
+# @tool
+# def search(query: str) -> str:
+#     """
+#     Tool that searches over internet
 
-    Args:
-        query: the string to search for 
+#     Args:
+#         query: the string to search for 
     
-    Returns:
-        The search result
-    """
+#     Returns:
+#         The search result
+#     """
 
-    print(f"Searching for {query}")
-    return tavily.search(query=query)
+#     print(f"Searching for {query}")
+#     return tavily.search(query=query)
 
 @tool
 def extractData(rawdata:str) -> str:
@@ -37,10 +38,10 @@ def extractData(rawdata:str) -> str:
     Returns:
         The extracted data
     """
-    return "Useful data"
+    return tavily.extract(rawdata)
 
 llm = ChatOpenAI(model="gpt-6-luna")
-tools = [search,extractData]
+tools = [TavilySearch(),extractData]
 agent = create_agent(model=llm,tools=tools)
 
 
